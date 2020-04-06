@@ -1,4 +1,4 @@
-###Warning! ALPHA software!
+### Warning! ALPHA software!
 
 The dnode-client-go library is designed to make it easier for developers to send transactions and make queries to the dfinance blockchain network.
 
@@ -76,7 +76,7 @@ func main() {
 }
 ```
 
-###TODO
+### TODO
 
 - [ ] A lot of tests 
 - [ ] Methods available for calling but not yet implemented in this library
