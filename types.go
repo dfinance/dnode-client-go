@@ -1,14 +1,14 @@
 package client
 
 import (
-	"github.com/cosmos/cosmos-sdk/client"
+	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/crypto/keys"
 	"github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/cosmos/cosmos-sdk/x/auth/client/rest"
-	"github.com/dfinance/dnode/x/currencies/msgs"
-	msmsgs "github.com/dfinance/dnode/x/multisig/msgs"
+	curr "github.com/dfinance/dnode/x/currencies"
+	msmsgs "github.com/dfinance/dnode/x/multisig"
 	"github.com/dfinance/dnode/x/oracle"
 )
 
@@ -31,9 +31,9 @@ type (
 	MsgPostPrice = oracle.MsgPostPrice
 	// MsgIssueCurrency struct for issue new currencies.
 	// IssueID could be txHash of transaction in another blockchain.
-	MsgIssueCurrency = msgs.MsgIssueCurrency
-	// MsgDestroyCurrency message for destroy currency
-	MsgDestroyCurrency = msgs.MsgDestroyCurrency
+	MsgIssueCurrency = curr.MsgIssueCurrency
+	// MsgWithdrawCurrency message for destroy currency
+	MsgWithdrawCurrency = curr.MsgWithdrawCurrency
 	// Assets array type for oracle module
 	Assets = oracle.Assets
 	// MsgSubmitCall message for submit call
@@ -60,8 +60,6 @@ type (
 )
 
 var (
-	// Create new instance of message to submit call.
-	NewMsgSubmitCall = msmsgs.NewMsgSubmitCall
 	// SortJSON takes any JSON and returns it sorted by keys. Also, all white-spaces
 	// are removed.
 	// This method can be used to canonicalize JSON to be returned by GetSignBytes,
@@ -71,9 +69,9 @@ var (
 )
 
 const (
-	BroadcastBlock = client.BroadcastBlock
-	BroadcastSync  = client.BroadcastSync
-	BroadcastAsync = client.BroadcastAsync
+	BroadcastBlock = flags.BroadcastBlock
+	BroadcastSync  = flags.BroadcastSync
+	BroadcastAsync = flags.BroadcastAsync
 )
 
 // TxBroadcastMode enumeration type for BroadcastMode numeric presentation

@@ -3,15 +3,18 @@
 package client
 
 import (
+	"bufio"
 	"os"
 	"testing"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/client/keys"
+	"github.com/cosmos/cosmos-sdk/client/flags"
+	"github.com/cosmos/cosmos-sdk/crypto/keys"
 	crkeys "github.com/cosmos/cosmos-sdk/crypto/keys"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/dfinance/dnode/cmd/config"
+	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 )
 
@@ -26,16 +29,17 @@ func init() {
 }
 
 func makeKeybaseAndClient(t *testing.T) (crkeys.Keybase, DnodeClient) {
-	kb, err := keys.NewKeyBaseFromDir(DefaultCLIHome)
+	inBuf := bufio.NewReader(os.Stdin)
+	kb, err := keys.NewKeyring("dfinance", "os", viper.GetString(flags.FlagHome), inBuf)
 	require.NoError(t, err)
 
 	txBuiler := auth.TxBuilder{}.
 		WithKeybase(kb).
 		WithChainID("dn-testnet").
 		WithFees("1dfi").
-		WithGas(200000)
+		WithGas(500000)
 
-	client := New(WithTxBuilder(txBuiler), WithAccountName("oracle1"), WithPassphrase("12345678"))
+	client := New(WithTxBuilder(txBuiler), WithAccountName("oracle1"))
 	require.NoError(t, err)
 
 	return kb, client
@@ -52,13 +56,13 @@ func TestDnodeClient_PostPrices(t *testing.T) {
 	result, err := cl.WithAccount(acc).Oracle().PostPrices([]MsgPostPrice{
 		{
 			From:       ki.GetAddress(),
-			AssetCode:  "eth_dfi",
+			AssetCode:  "eth_usdt",
 			Price:      sdk.NewInt(1000000),
 			ReceivedAt: time.Now(),
 		},
 		{
 			From:       ki.GetAddress(),
-			AssetCode:  "eth_dfi",
+			AssetCode:  "dfi_eth",
 			Price:      sdk.NewInt(1200000),
 			ReceivedAt: time.Now(),
 		},
@@ -79,11 +83,9 @@ func TestDnodeClient_IssueCurrency(t *testing.T) {
 
 	acc, err := cl.Auth().Account(ki.GetAddress())
 	issueMsg := MsgIssueCurrency{
-		Symbol:    "usdt",
-		Amount:    sdk.NewInt(1000),
-		Decimals:  0,
-		Recipient: acc.GetAddress(),
-		IssueID:   "Issuing USDT",
+		ID:    "Issuing USDT",
+		Coin:  sdk.NewCoin("USDT", sdk.NewInt(1000)),
+		Payee: acc.GetAddress(),
 	}
 	resp, err := cl.WithAccount(acc).WithAccountName("validator1").WithBroadcastMode(TxBlockMode).Currencies().Issue(issueMsg, "msgID#1")
 	require.NoError(t, err)

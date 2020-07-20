@@ -7,10 +7,10 @@ type CurrenciesClient struct {
 
 // Issue currency
 func (c CurrenciesClient) Issue(msg MsgIssueCurrency, msgID string) (TxResponse, error) {
-	return c.dc.Tx().Broadcast([]Msg{Msg(NewMsgSubmitCall(msg, msgID, c.dc.fromAddress))})
+	return c.dc.Tx().Broadcast([]Msg{Msg(MsgSubmitCall{Msg: msg, UniqueID: msgID, Creator: c.dc.fromAddress})})
 }
 
-// Destroy currency
-func (c CurrenciesClient) Destroy(msg MsgDestroyCurrency) (TxResponse, error) {
+// Withdraw currency
+func (c CurrenciesClient) Withdraw(msg MsgWithdrawCurrency) (TxResponse, error) {
 	return c.dc.Tx().Broadcast([]Msg{msg})
 }
