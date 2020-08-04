@@ -8,7 +8,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth"
 	"github.com/cosmos/cosmos-sdk/x/auth/client/rest"
 	curr "github.com/dfinance/dnode/x/currencies"
-	msmsgs "github.com/dfinance/dnode/x/multisig"
+	msmsgs "github.com/dfinance/dnode/x/multisig/client"
 	"github.com/dfinance/dnode/x/oracle"
 )
 
